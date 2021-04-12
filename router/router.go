@@ -7,10 +7,13 @@ import (
 
 func RouterInit () (r *gin.Engine) {
 	r = gin.Default()
-	books := r.Group("/books")
+	api := r.Group("/api")
 	{
-		books.POST("", controller.BorrowBook)
-		books.GET("/:bookID", controller.GetBookName)
+		books := api.Group("/books")
+		{
+			books.POST("", controller.BorrowBook)
+			books.GET("/:bookID", controller.GetBookName)
+		}
 	}
 	return
 }
