@@ -12,7 +12,7 @@ func GetBookName (bookID int16) (bookName string, err error) {
 }
 
 func ReturnBook (returnInfo *model.ReturnBook) (ok bool) {
-	if err := Mysql.Table("records").Updates(map[string]interface{}{"is_returned": 1, "return_timestamp": time.Now(), "thoughts": returnInfo.Thoughts}).Error; err != nil {
+	if err := Mysql.Table("records").Where("book_id=?", returnInfo.BookID).Updates(map[string]interface{}{"is_returned": 1, "return_timestamp": time.Now(), "thoughts": returnInfo.Thoughts}).Error; err != nil {
 		return false
 	}
 	if ok, _ = changeBookStatus(false, returnInfo.BookID); !ok {
