@@ -33,7 +33,7 @@ func BorrowABook (borrowInfo *model.BorrowBook) (ok bool, msg string) {
 
 	borrowInfo.BorrowTimestamp = time.Now().Local()
 
-	Mysql.Table("records").Select("book_id", "student_id", "borrow_timestamp").Create(borrowInfo)
+	Mysql.Table("records").Select("book_id", "student_id", "borrow_timestamp").Create(&borrowInfo)
 	if ok, msg = changeBookStatus(true, borrowInfo.BookID); !ok {
 		return
 	}
