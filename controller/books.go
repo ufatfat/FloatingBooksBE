@@ -38,7 +38,7 @@ func BorrowBook (c *gin.Context) {
 	ok, err = regexp.Match("[UMDumd](20)((1[6-9])|(20))\\d{5}", []byte(borrowInfo.StudentID))
 	if !ok {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-			"msg": "手机号格式有误！",
+			"msg": "学号格式有误！",
 		})
 		return
 	}
