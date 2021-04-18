@@ -90,3 +90,26 @@ func GetBookName (c *gin.Context) {
 		},
 	})
 }
+
+func ReturnBook (c *gin.Context) {
+	data := c.PostForm("data")
+	var returnInfo model.ReturnBook
+	if err := json.Unmarshal([]byte(data), &returnInfo); err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"msg": "数据有误！",
+		})
+		return
+	}
+
+	if ok := db.ReturnBook(&returnInfo);  ok {
+		c.JSON(http.StatusOK, gin.H{
+			"msg": "还书成功！",
+		})
+		return
+	} else {
+		c.AbortWithStatusJSON(http.StatusOK, gin.H{
+			"msg": "出错！",
+		})
+		return
+	}
+}

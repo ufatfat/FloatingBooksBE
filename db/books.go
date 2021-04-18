@@ -11,6 +11,18 @@ func GetBookName (bookID int16) (bookName string, err error) {
 	return
 }
 
+func ReturnBook (returnInfo *model.ReturnBook) (ok bool) {
+	if err := Mysql.Table("records").Updates(map[string]interface{}{"is_returned": 1, "return_timestamp": time.Now(), "thoughts": returnInfo.Thoughts}).Error; err != nil {
+		return false
+	}
+	if ok, _ = changeBookStatus(false, returnInfo.BookID); !ok {
+		return ok
+	}
+	if ok = changeBookLocation(returnInfo.LocationID, returnInfo.BookID); !ok {
+		return ok
+	}
+	return true
+}
 func BorrowABook (borrowInfo *model.BorrowBook) (ok bool, msg string) {
 	if ok, msg = createUser(borrowInfo); !ok {
 		return
@@ -41,6 +53,13 @@ func createUser (borrowInfo *model.BorrowBook) (ok bool, msg string) {
 
 func checkBorrow (borrowInfo *model.BorrowBook) (ok bool, msg string) {
 	return true, ""
+}
+
+func changeBookLocation (locationID uint8, bookID int16) (ok bool) {
+	if err := Mysql.Table("books").Update("book_location", locationID).Error; err != nil {
+		return
+	}
+	return true
 }
 
 func changeBookStatus (isLend bool, bookID int16) (ok bool, msg string) {
