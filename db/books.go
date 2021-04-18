@@ -56,14 +56,14 @@ func checkBorrow (borrowInfo *model.BorrowBook) (ok bool, msg string) {
 }
 
 func changeBookLocation (locationID uint8, bookID string) (ok bool) {
-	if err := Mysql.Table("books").Update("book_location", locationID).Where("book_id", bookID).Error; err != nil {
+	if err := Mysql.Table("books").Where("book_id", bookID).Update("book_location", locationID).Error; err != nil {
 		return
 	}
 	return true
 }
 
 func changeBookStatus (isLend bool, bookID string) (ok bool, msg string) {
-	if err := Mysql.Table("books").Update("is_lend", isLend).Where("book_id=", bookID).Error; err != nil {
+	if err := Mysql.Table("books").Where("book_id=", bookID).Update("is_lend", isLend).Error; err != nil {
 		return
 	}
 	return true, ""
