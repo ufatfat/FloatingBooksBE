@@ -4,7 +4,6 @@ import (
 	"FloatingBooks/db"
 	"FloatingBooks/model"
 	"encoding/json"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"net/http"
@@ -48,16 +47,21 @@ func BorrowBook (c *gin.Context) {
 		return
 	}
 
-	if ok, msg := db.BorrowABook(&borrowInfo); !ok {
-		c.AbortWithStatusJSON(http.StatusOK, gin.H{
+	if ok, msg := db.BorrowABook(&borrowInfo); ok {
+		c.JSON(http.StatusOK, gin.H{
 			"msg": msg,
 		})
+		return
+	} else {
+		c.AbortWithStatusJSON(http.StatusOK, gin.H{
+			"msg": "出错！",
+		})
+		return
 	}
 }
 
 func GetBookName (c *gin.Context) {
 	bookID, err := strconv.ParseInt(c.Param("bookID"), 10, 16)
-	fmt.Println(bookID)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"msg": "数据有误！",

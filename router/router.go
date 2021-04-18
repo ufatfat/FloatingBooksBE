@@ -14,6 +14,10 @@ func RouterInit () (r *gin.Engine) {
 			books.POST("", controller.BorrowBook)
 			books.GET("/:bookID", controller.GetBookName)
 		}
+		places := api.Group("/places")
+		{
+			places.GET("", controller.GetPlaces)
+		}
 	}
 	return
 }

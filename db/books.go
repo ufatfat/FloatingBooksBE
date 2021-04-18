@@ -19,9 +19,12 @@ func BorrowABook (borrowInfo *model.BorrowBook) (ok bool, msg string) {
 		return
 	}
 
-	borrowInfo.BorrowTimestamp = time.Now()
+	borrowInfo.BorrowTimestamp = time.Now().Local()
 
 	Mysql.Table("records").Select("book_id", "student_id", "borrow_timestamp").Create(borrowInfo)
+	if ok, msg = changeBookStatus(true, borrowInfo.BookID); !ok {
+		return
+	}
 	return true, "借书成功！"
 }
 
@@ -37,5 +40,12 @@ func createUser (borrowInfo *model.BorrowBook) (ok bool, msg string) {
 }
 
 func checkBorrow (borrowInfo *model.BorrowBook) (ok bool, msg string) {
+	return true, ""
+}
+
+func changeBookStatus (isLend bool, bookID int16) (ok bool, msg string) {
+	if err := Mysql.Table("books").Update("is_lend", isLend).Error; err != nil {
+		return
+	}
 	return true, ""
 }
