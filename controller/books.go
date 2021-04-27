@@ -94,7 +94,7 @@ func GetBookName (c *gin.Context) {
 func ReturnBook (c *gin.Context) {
 	data := c.PostForm("data")
 	var returnInfo model.ReturnBook
-	if err := json.Unmarshal([]byte(data), &returnInfo); err != nil {
+	if err := json.Unmarshal([]byte(data), &returnInfo); err != nil || returnInfo.BookID == "" || returnInfo.LocationID == 0 || returnInfo.Thoughts == "" {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"msg": "数据有误！",
 		})
